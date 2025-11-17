@@ -3,7 +3,16 @@ var express = require('express')
 var port = process.env.PORT || 8000
 var app = express()
 
+app.set("view engine", "ejs")
+
 app.use(express.static('static'))
+
+app.get("/card-test", function (req, res) {
+  res.status(200).render("photoCard", {
+    url: "https://picsum.photos/512",
+    caption: "Some random thing from Lorem Picsum"
+  })
+})
 
 app.get('/people', function (req, res, next) {
   res.status(200).sendFile(__dirname + '/static/people.html')
