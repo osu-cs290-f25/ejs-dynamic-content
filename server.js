@@ -1,5 +1,8 @@
 var express = require('express')
 
+var peopleData = require("./peopleData.json")
+console.log("== peopleData:", peopleData)
+
 var port = process.env.PORT || 8000
 var app = express()
 
@@ -18,20 +21,16 @@ app.get('/people', function (req, res, next) {
   res.status(200).sendFile(__dirname + '/static/people.html')
 })
 
-var availablePeople = [
-  'luke',
-  'leia',
-  'rey',
-  'finn',
-  'r2d2'
-]
-
 app.get('/people/:person', function (req, res, next) {
   var person = req.params.person.toLowerCase()
-  if (availablePeople.indexOf(person) >= 0) {
-    res.status(200).sendFile(
-      __dirname + '/static/people/' + person + '.html'
-    )
+  var personData = peopleData[person]
+  console.log("  -- personData:", personData)
+  if (personData) {
+    res.status(200).render("photoPage", {
+      name: personData.name,
+      photos: personData.photos,
+      bannerText: false
+    })
   } else {
     next()
   }
@@ -45,5 +44,5 @@ app.listen(port, function (err) {
   if (err) {
     throw err
   }
-  console.log("== Server listening on port", port)
+  console.log("== Server listening on port:", port)
 })
